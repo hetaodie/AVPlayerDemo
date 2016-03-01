@@ -14,7 +14,8 @@
 @property (nonatomic, retain) NSURL *playerURL;
 @property (nonatomic, retain) NSMutableArray *urlArray;
 @property (nonatomic, assign) BOOL isCircle;
-@property (nonatomic ,retain) id playbackTimeObserver;
+@property (nonatomic, retain) id playbackTimeObserver;
+@property (nonatomic, assign) CGFloat totalTime;
 @end
 
 
@@ -32,13 +33,11 @@
 {
     self.delegate = nil;
     [self removeNotification];
-    [self removeObserverFromPlayerItem:self.player.currentItem];
-    [self.player removeTimeObserver:self.playbackTimeObserver];
+    [self unmonitoringPlayback:self.player.currentItem];
     [_player release];
     [_playerLayer release];
     [_playerURL release];
     [_urlArray release];
-    [_playbackTimeObserver release];
 
     [super dealloc];
 }
@@ -52,6 +51,7 @@
 - (PlayerView *)initPlayerViewWithURl:(NSURL *)aUrl isCircle:(BOOL)isCircle{
     self = [super init];
     if (self) {
+        self.totalTime = 0.0;
         self.playerURL = aUrl;
         self.isCircle = isCircle;
         [self setupPlayer];
@@ -74,7 +74,8 @@
 - (void)setNewUrl:(NSURL *)aNewUrl isCircle:(BOOL)isCircle{
     self.isCircle = isCircle;
     
-    [self.player removeTimeObserver:self.playbackTimeObserver];
+    [self unmonitoringPlayback:self.player.currentItem];
+//    self.playbackTimeObserver = nil;
     [self removeNotification];
     [self removeObserverFromPlayerItem:self.player.currentItem];
     AVPlayerItem *playerItem = [AVPlayerItem  playerItemWithURL:aNewUrl];
@@ -82,6 +83,7 @@
     //切换视频
     [self.player replaceCurrentItemWithPlayerItem:playerItem];
     [self addNotification];
+    [self monitoringPlayback:self.player.currentItem];
 }
 
 - (void)setPlayerVideoGravity:(PlayerVideoResize )aVideoGravity{
@@ -105,16 +107,30 @@
 
 - (void)play{
     [self.player play];
+    [self monitoringPlayback:self.player.currentItem];
+}
+
+- (void)playFromTime:(CGFloat)aTime{
+    if (aTime > self.totalTime || aTime<0) {
+        aTime = 0.0f;
+    }
+    
+    CMTime changedTime = CMTimeMakeWithSeconds(aTime, 1);
+    [self.player seekToTime:changedTime];
+    [self.player play];
+    [self monitoringPlayback:self.player.currentItem];
 }
 
 - (void)pause{
     [self.player pause];
+    [self unmonitoringPlayback:self.player.currentItem];
 }
 
 - (void)stop{
     CMTime changedTime = CMTimeMakeWithSeconds(0.0, 1);
     [self.player seekToTime:changedTime];
     [self.player pause];
+     [self unmonitoringPlayback:self.player.currentItem];
 }
 
 - (void)setPlayerMute:(BOOL)isMute{
@@ -215,11 +231,23 @@
 }
 
 - (void)monitoringPlayback:(AVPlayerItem *)playerItem {
+    if (self.playbackTimeObserver !=nil) {
+        [self unmonitoringPlayback:self.player.currentItem];
+    }
     self.playbackTimeObserver = [self.player addPeriodicTimeObserverForInterval:CMTimeMake(1, 1) queue:NULL usingBlock:^(CMTime time)
     {
         CGFloat currentSecond = playerItem.currentTime.value/playerItem.currentTime.timescale;// 计算当前在第几秒
         [self changeCurrentSecond:currentSecond];
     }];
+}
+
+- (void)unmonitoringPlayback:(AVPlayerItem *)playerItem {
+
+    if (self.playbackTimeObserver !=nil) {
+        [self.player removeTimeObserver:self.playbackTimeObserver];
+        self.playbackTimeObserver = nil;
+    }
+
 }
 
 - (void)changeCurrentSecond:(CGFloat)currentSecond{
@@ -261,9 +289,10 @@
         if(status==AVPlayerStatusReadyToPlay){
             if (self.delegate && [self.delegate respondsToSelector:@selector(onPlayerloadSuccessWithTotalSecond:)]) {
                 CGFloat totalSecond = playerItem.duration.value / playerItem.duration.timescale;// 转换成秒
+                self.totalTime = totalSecond;
                 [self.delegate onPlayerloadSuccessWithTotalSecond:totalSecond];
             }
-            [self monitoringPlayback:self.player.currentItem];
+//            [self monitoringPlayback:self.player.currentItem];
             
         }
         else if ([playerItem status] == AVPlayerStatusFailed) {

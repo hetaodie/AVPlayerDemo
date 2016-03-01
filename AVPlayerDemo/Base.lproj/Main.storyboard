@@ -127,7 +127,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="zg1-Bx-6Of">
-                                <rect key="frame" x="20" y="458" width="106" height="30"/>
+                                <rect key="frame" x="-2" y="458" width="106" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <state key="normal" title="changeItem1"/>
                                 <connections>
@@ -142,20 +142,20 @@
                                     <action selector="btnMuted:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ikd-Xg-tUx"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="R4v-v8-8TD">
-                                <rect key="frame" x="262" y="458" width="30" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="短"/>
-                                <connections>
-                                    <action selector="btnChangeDuan:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Qdx-fn-a33"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="YRR-nL-1pt">
-                                <rect key="frame" x="142" y="458" width="88" height="30"/>
+                                <rect key="frame" x="103" y="458" width="88" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <state key="normal" title="changeItem2"/>
                                 <connections>
                                     <action selector="btnChange2:" destination="BYZ-38-t0r" eventType="touchUpInside" id="kDo-sn-ZDf"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="R4v-v8-8TD">
+                                <rect key="frame" x="206" y="458" width="94" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
+                                <state key="normal" title="短"/>
+                                <connections>
+                                    <action selector="btnChangeDuan:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Qdx-fn-a33"/>
                                 </connections>
                             </button>
                         </subviews>

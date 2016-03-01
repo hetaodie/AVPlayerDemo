@@ -97,6 +97,13 @@
 - (void)play;
 
 /*!
+ *  从给定的时间点开始播放
+ *
+ *  @param aTime 给定的播放时间点，如果给的时间点大于总长度，则从0开始播放
+ */
+- (void)playFromTime:(CGFloat)aTime;
+
+/*!
  *  暂停视频播放,再次调用play时会接着已经播放的位置进行播放
  */
 - (void)pause;

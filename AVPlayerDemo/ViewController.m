@@ -97,6 +97,9 @@
 }
 - (IBAction)btnStop:(id)sender {
     [self.playerView stop];
+    [_playerView removeFromSuperview];
+    [_playerView release];
+    
 }
 - (IBAction)btnChange:(id)sender {
     [self.playerView setNewUrl:[self getFileUrl] isCircle:YES];
@@ -168,7 +171,7 @@
  *  @return 文件路径
  */
 -(NSURL *)getFileUrl2{
-    NSString *urlStr=[[NSBundle mainBundle] pathForResource:@"test2.mov" ofType:nil];
+    NSString *urlStr=[[NSBundle mainBundle] pathForResource:@"test2.mp4" ofType:nil];
     NSURL *url=[NSURL fileURLWithPath:urlStr];
     return url;
 }
